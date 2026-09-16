@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#111111"/>
+  <rect x="42" y="42" width="428" height="428" rx="82" fill="#222222"/>
+  <circle cx="256" cy="205" r="68" fill="#eeeeee"/>
+  <rect x="225" y="245" width="62" height="105" rx="16" fill="#eeeeee"/>
+  <text x="256" y="420" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="54" font-weight="bold"
+        fill="#eeeeee">LOGIN</text>
+</svg>
