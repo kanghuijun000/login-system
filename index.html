@@ -333,7 +333,7 @@
   </div>
 
 
-  <!-- 관리자 비밀번호 입력 팝업 -->
+  <!-- 관리자 비밀번호 팝업 (취소 버튼 없이 확인 버튼만 존재) -->
 
   <div class="popup-background" id="adminPopup">
 
@@ -805,7 +805,8 @@
     );
 
 
-    /* 추가 버튼 클릭 시 관리자 인증 팝업 열기 */
+    /* 추가 버튼 클릭 시 커스텀 관리자 팝업 열기 */
+
     addUIButton.addEventListener(
       "click",
       function() {
@@ -823,7 +824,9 @@
       }
     );
 
-    /* 관리자 비밀번호 검증 (확인 버튼 클릭 시) */
+
+    /* 관리자 비밀번호 확인 버튼 클릭 시 검증 */
+
     adminConfirmButton.addEventListener(
       "click",
       function() {
@@ -831,8 +834,11 @@
         const adminPassword = adminPasswordInput.value;
 
         if (adminPassword !== "1q2w3e") {
+
           alert("관리자 비밀번호가 올바르지 않습니다.");
+
           return;
+
         }
 
         adminPopup.classList.remove("show");
@@ -844,15 +850,22 @@
       }
     );
 
-    /* 엔터 키로 관리자 비밀번호 제출 */
+
+    /* 관리자 비밀번호 창에서 Enter 키 입력 시 확인 처리 */
+
     adminPasswordInput.addEventListener(
       "keypress",
       function(e) {
+
         if (e.key === "Enter") {
+
           adminConfirmButton.click();
+
         }
+
       }
     );
+
 
     /* 로그인 닫기 */
 
