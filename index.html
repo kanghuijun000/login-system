@@ -5,6 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- 1. 브라우저 강력 캐시 방지 메타 태그 추가 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- 앱 설정 -->
   <meta name="theme-color" content="#111111">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1457,7 +1462,7 @@
     );
 
 
-    /* 커스텀 삭제 confirmation 팝업 열기 (confirm 함수 대체) */
+    /* 커스텀 삭제 confirmation 팝업 열기 */
 
     function deleteAccount(index) {
 
@@ -1496,9 +1501,9 @@
     });
 
 
-    /* =========================
-       PWA 서비스 워커 등록
-    ========================= */
+    /* ========================================================
+       2. 서비스 워커 자동 해제 및 항상 최신 버전 로드 설정
+    ======================================================== */
 
     if ("serviceWorker" in navigator) {
 
@@ -1506,14 +1511,31 @@
         "load",
         function() {
 
+          // 기존 캐시를 가지고 있는 서비스 워커 강제 등록 해제 (최신화 보장)
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+
+            for (let registration of registrations) {
+
+              registration.unregister();
+
+            }
+
+          });
+
+          // 캐시를 타지 않도록 현재 시간을 타임스탬프로 붙여 서비스 워커 호출
+          const timeStamp = new Date().getTime();
+
           navigator.serviceWorker.register(
-            "./sw.js"
+            "./sw.js?v=" + timeStamp
           )
           .then(
-            function() {
+            function(registration) {
+
+              // 서비스 워커에 업데이트가 있으면 즉시 갱신
+              registration.update();
 
               console.log(
-                "앱 기능이 활성화되었습니다."
+                "앱 기능이 최신 상태로 업데이트되었습니다."
               );
 
             }
