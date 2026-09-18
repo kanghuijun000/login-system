@@ -96,7 +96,8 @@
     .login-box,
     .add-box,
     .edit-box,
-    .admin-box {
+    .admin-box,
+    .confirm-box {
       width: 100%;
       max-width: 420px;
       background: #222;
@@ -274,7 +275,8 @@
       .login-box,
       .add-box,
       .edit-box,
-      .admin-box {
+      .admin-box,
+      .confirm-box {
         margin-top: 10px;
         margin-bottom: 10px;
         padding: 20px;
@@ -333,7 +335,7 @@
   </div>
 
 
-  <!-- 관리자 비밀번호 팝업 (취소 버튼 없이 확인 버튼만 존재) -->
+  <!-- 관리자 비밀번호 팝업 (취소 버튼 없음) -->
 
   <div class="popup-background" id="adminPopup">
 
@@ -360,6 +362,32 @@
         type="button"
         class="action-button"
         id="adminConfirmButton">
+
+        확인
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- 커스텀 삭제 확인 팝업 (취소 버튼 없음) -->
+
+  <div class="popup-background" id="deleteConfirmPopup">
+
+    <div class="confirm-box">
+
+      <h2 class="popup-title">
+        계정 삭제
+      </h2>
+
+      <p id="deleteConfirmMessage" style="text-align: center; color: #ddd; margin-bottom: 20px;"></p>
+
+      <button
+        type="button"
+        class="action-button"
+        id="deleteConfirmButton">
 
         확인
 
@@ -717,6 +745,15 @@
     const adminConfirmButton =
       document.getElementById("adminConfirmButton");
 
+    const deleteConfirmPopup =
+      document.getElementById("deleteConfirmPopup");
+
+    const deleteConfirmMessage =
+      document.getElementById("deleteConfirmMessage");
+
+    const deleteConfirmButton =
+      document.getElementById("deleteConfirmButton");
+
     const loginPopup =
       document.getElementById("loginPopup");
 
@@ -748,9 +785,11 @@
       document.getElementById("accountList");
 
 
-    /* 수정 중인 계정 */
+    /* 수정 및 삭제 작업용 인덱스 */
 
     let editingIndex = -1;
+
+    let deletingIndex = -1;
 
 
     /* 로그인 입력 초기화 */
@@ -801,6 +840,8 @@
 
         adminPopup.classList.remove("show");
 
+        deleteConfirmPopup.classList.remove("show");
+
       }
     );
 
@@ -820,6 +861,8 @@
         editPopup.classList.remove("show");
 
         addPopup.classList.remove("show");
+
+        deleteConfirmPopup.classList.remove("show");
 
       }
     );
@@ -1414,49 +1457,43 @@
     );
 
 
-    /* 계정 삭제 */
+    /* 커스텀 삭제 confirmation 팝업 열기 (confirm 함수 대체) */
 
     function deleteAccount(index) {
 
-      const account =
-        accounts[index];
+      deletingIndex = index;
+
+      const account = accounts[index];
+
+      deleteConfirmMessage.textContent = "'" + account.username + "' 계정을 삭제하시겠습니까?";
+
+      deleteConfirmPopup.classList.add("show");
+
+    }
 
 
-      const confirmed =
-        confirm(
-          "'" +
-          account.username +
-          "' 계정을 정말 삭제하시겠습니까?"
-        );
+    /* 삭제 확인 버튼 실행 */
 
+    deleteConfirmButton.addEventListener("click", function() {
 
-      if (!confirmed) {
+      if (deletingIndex === -1) return;
 
-        return;
-
-      }
-
-
-      accounts.splice(
-        index,
-        1
-      );
-
+      accounts.splice(deletingIndex, 1);
 
       localStorage.setItem(
         "myLoginAccounts",
         JSON.stringify(accounts)
       );
 
+      deleteConfirmPopup.classList.remove("show");
 
-      alert(
-        "계정이 삭제되었습니다."
-      );
+      deletingIndex = -1;
 
+      alert("계정이 삭제되었습니다.");
 
       showAccounts();
 
-    }
+    });
 
 
     /* =========================
