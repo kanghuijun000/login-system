@@ -95,7 +95,8 @@
 
     .login-box,
     .add-box,
-    .edit-box {
+    .edit-box,
+    .admin-box {
       width: 100%;
       max-width: 420px;
       background: #222;
@@ -272,7 +273,8 @@
 
       .login-box,
       .add-box,
-      .edit-box {
+      .edit-box,
+      .admin-box {
         margin-top: 10px;
         margin-bottom: 10px;
         padding: 20px;
@@ -324,6 +326,43 @@
         class="menu-button"
         id="addUIButton">
         추가
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- 관리자 비밀번호 입력 팝업 -->
+
+  <div class="popup-background" id="adminPopup">
+
+    <div class="admin-box">
+
+      <h2 class="popup-title">
+        관리자 인증
+      </h2>
+
+      <div class="input-group">
+
+        <label>
+          관리자 비밀번호를 입력하세요.
+        </label>
+
+        <input
+          type="password"
+          id="adminPasswordInput"
+          placeholder="비밀번호 입력">
+
+      </div>
+
+      <button
+        type="button"
+        class="action-button"
+        id="adminConfirmButton">
+
+        확인
+
       </button>
 
     </div>
@@ -669,6 +708,15 @@
     const addUIButton =
       document.getElementById("addUIButton");
 
+    const adminPopup =
+      document.getElementById("adminPopup");
+
+    const adminPasswordInput =
+      document.getElementById("adminPasswordInput");
+
+    const adminConfirmButton =
+      document.getElementById("adminConfirmButton");
+
     const loginPopup =
       document.getElementById("loginPopup");
 
@@ -751,31 +799,60 @@
 
         editPopup.classList.remove("show");
 
+        adminPopup.classList.remove("show");
+
       }
     );
 
 
-    /* 추가 팝업 열기 */
+    /* 추가 버튼 클릭 시 관리자 인증 팝업 열기 */
     addUIButton.addEventListener(
-"click",
-function() {
+      "click",
+      function() {
 
-const adminPassword = prompt(
-"관리자 비밀번호를 입력하세요."
-);
+        adminPasswordInput.value = "";
 
-if (adminPassword !== "1q2w3e") {
-alert("관리자 비밀번호가 올바르지 않습니다.");
-return;
-}
+        adminPopup.classList.add("show");
 
-addPopup.classList.add("show");
-loginPopup.classList.remove("show");
-editPopup.classList.remove("show");
-showAccounts();
+        loginPopup.classList.remove("show");
 
-}
-);
+        editPopup.classList.remove("show");
+
+        addPopup.classList.remove("show");
+
+      }
+    );
+
+    /* 관리자 비밀번호 검증 (확인 버튼 클릭 시) */
+    adminConfirmButton.addEventListener(
+      "click",
+      function() {
+
+        const adminPassword = adminPasswordInput.value;
+
+        if (adminPassword !== "1q2w3e") {
+          alert("관리자 비밀번호가 올바르지 않습니다.");
+          return;
+        }
+
+        adminPopup.classList.remove("show");
+
+        addPopup.classList.add("show");
+
+        showAccounts();
+
+      }
+    );
+
+    /* 엔터 키로 관리자 비밀번호 제출 */
+    adminPasswordInput.addEventListener(
+      "keypress",
+      function(e) {
+        if (e.key === "Enter") {
+          adminConfirmButton.click();
+        }
+      }
+    );
 
     /* 로그인 닫기 */
 
